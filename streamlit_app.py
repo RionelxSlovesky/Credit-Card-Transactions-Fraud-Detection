@@ -14,35 +14,52 @@ section = st.sidebar.radio(
 )
 
 # Time-based Fraud Analysis
-def plot_frauds_by_time_streamlit(df):
-    df['hour'] = pd.to_datetime(df['trans_date_trans_time']).dt.hour
-    fraud_by_hour = df[df['is_fraud'] == 1].groupby('hour').size()
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(fraud_by_hour.index, fraud_by_hour.values, marker='o', label='Fraud Count')
-    ax.set_title("Number of Frauds by Time of Day")
-    ax.set_xlabel("Hour of the Day")
-    ax.set_ylabel("Number of Frauds")
+def plot_frauds_by_hour(df):
+    df['trans_date_trans_time'] = pd.to_datetime(df['trans_date_trans_time'])
+    fraud_data = df[df['is_fraud'] == 1].copy()
+    fraud_data['hour'] = fraud_data['trans_date_trans_time'].dt.hour
+    fraud_counts_by_hour = fraud_data.groupby('hour').size()
+    
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax.plot(
+        fraud_counts_by_hour.index, 
+        fraud_counts_by_hour.values, 
+        marker='o', 
+        linestyle='-', 
+        color='tab:red'
+    )
+    
+    ax.set_title('Number of Frauds by Time of Day', fontsize=16)
+    ax.set_xlabel('Time of Day (Hour)', fontsize=14)
+    ax.set_ylabel('Number of Frauds', fontsize=14)
     ax.grid(True)
-    ax.legend()
+    ax.set_xticks(range(0, 24))
+    
     st.pyplot(fig)
 
-def plot_frauds_by_day_streamlit(df):
-    df['day_of_week'] = pd.to_datetime(df['trans_date_trans_time']).dt.day_name()
-    fraud_by_day = df[df['is_fraud'] == 1].groupby('day_of_week').size()
-
-    ordered_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    fraud_by_day = fraud_by_day.reindex(ordered_days)
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.bar(fraud_by_day.index, fraud_by_day.values, color='skyblue', label='Fraud Count')
-    ax.set_title("Number of Frauds by Day of the Week")
-    ax.set_xlabel("Day of the Week")
-    ax.set_ylabel("Number of Frauds")
-    ax.set_xticks(range(len(fraud_by_day.index)))
-    ax.set_xticklabels(fraud_by_day.index, rotation=45)
-    ax.grid(axis='y')
-    ax.legend()
+def plot_frauds_by_day_of_week(df):
+    df['trans_date_trans_time'] = pd.to_datetime(df['trans_date_trans_time'])
+    fraud_data = df[df['is_fraud'] == 1].copy()
+    fraud_data['day_of_week'] = fraud_data['trans_date_trans_time'].dt.dayofweek
+    fraud_counts_by_day = fraud_data.groupby('day_of_week').size()
+    
+    day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    fraud_counts_by_day.index = fraud_counts_by_day.index.map(lambda x: day_names[x])
+    
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax.plot(
+        fraud_counts_by_day.index, 
+        fraud_counts_by_day.values, 
+        marker='o', 
+        linestyle='-', 
+        color='tab:red'
+    )
+    
+    ax.set_title('Number of Frauds by Day of the Week', fontsize=16)
+    ax.set_xlabel('Day of the Week', fontsize=14)
+    ax.set_ylabel('Number of Frauds', fontsize=14)
+    ax.grid(True)
+    
     st.pyplot(fig)
     
 # Demographic and Geographic Analysis
@@ -232,11 +249,11 @@ elif section == "Time-Based Analysis":
         if time_option is "Time-based":
             st.header("Time-Based Analysis")
             st.subheader("Frauds by Time of Day")
-            plot_frauds_by_time_streamlit(df)
+            plot_frauds_by_hour(df)
         else:
             st.header("Day-Based Analysis")
             st.subheader("Frauds by Day of the Week")
-            plot_frauds_by_day_streamlit(df)
+            plot_frauds_by_day_of_week(df)
     else:
         st.warning("Please upload a dataset to analyze.")
 
