@@ -203,6 +203,30 @@ def plot_fraud_by_city_population(df):
     ax.grid(axis='y', linestyle='--', alpha=0.7)
     
     st.pyplot(fig)
+    
+# Contextual Analysis
+def plot_fraud_boxplot_by_category(df):
+    fraud_data = df[df['is_fraud'] == 1]
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+    fraud_data.boxplot(
+        column='amt',
+        by='category',
+        vert=False,
+        patch_artist=True,
+        showfliers=False,
+        grid=True,
+        ax=ax
+    )
+    
+    ax.set_title('Fraudulent Transaction Amounts by Merchant Category', fontsize=16)
+    ax.set_xlabel('Transaction Amount', fontsize=14)
+    ax.set_ylabel('Merchant Category', fontsize=14)
+    fig.suptitle('')  # Remove the automatic "Boxplot grouped by category" title
+    plt.tight_layout()
+    
+    st.pyplot(fig)
+
 
 if section == "Dataset Information":
     if uploaded_file is not None:
@@ -294,8 +318,10 @@ elif section == "Demographic and Geographic Analysis":
 
 elif section == "Contextual Analysis":
     st.header("Contextual Analysis")
-    st.write("Examine fraud based on contextual factors like merchant category.")
+    st.write("Examine fraud based on the contextual factor- merchant category.")
     if uploaded_file is not None:
-        st.write(f"Contextual Analysis Section")
+        df = pd.read_csv(uploaded_file, index_col=0)
+        st.subheader("Fraudulent Transaction Amounts by Merchant Category")
+        plot_fraud_boxplot_by_category(df)
     else:
         st.warning("Please upload a dataset to analyze.")
