@@ -13,6 +13,39 @@ section = st.sidebar.radio(
     ("Dataset Information", "Time-Based Analysis", "Demographic and Geographic Analysis", "Contextual Analysis")
 )
 
+# Time-based Fraud Analysis
+def plot_frauds_by_time_streamlit(df):
+    df['hour'] = pd.to_datetime(df['trans_date_trans_time']).dt.hour
+    fraud_by_hour = df[df['is_fraud'] == 1].groupby('hour').size()
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(fraud_by_hour.index, fraud_by_hour.values, marker='o', label='Fraud Count')
+    ax.set_title("Number of Frauds by Time of Day")
+    ax.set_xlabel("Hour of the Day")
+    ax.set_ylabel("Number of Frauds")
+    ax.grid(True)
+    ax.legend()
+    st.pyplot(fig)
+
+def plot_frauds_by_day_streamlit(df):
+    df['day_of_week'] = pd.to_datetime(df['trans_date_trans_time']).dt.day_name()
+    fraud_by_day = df[df['is_fraud'] == 1].groupby('day_of_week').size()
+
+    # Order the days of the week
+    ordered_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    fraud_by_day = fraud_by_day.reindex(ordered_days)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.bar(fraud_by_day.index, fraud_by_day.values, color='skyblue', label='Fraud Count')
+    ax.set_title("Number of Frauds by Day of the Week")
+    ax.set_xlabel("Day of the Week")
+    ax.set_ylabel("Number of Frauds")
+    ax.set_xticks(range(len(fraud_by_day.index)))
+    ax.set_xticklabels(fraud_by_day.index, rotation=45)
+    ax.grid(axis='y')
+    ax.legend()
+    st.pyplot(fig)
+
 if section == "Dataset Information":
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file, index_col=0)
@@ -52,8 +85,17 @@ elif section == "Time-Based Analysis":
     st.header("Time-Based Analysis")
     st.write("Explore fraud patterns based on time or day-specific trends.")
     if uploaded_file is not None:
+        df = pd.read_csv(uploaded_file, index_col=0)
         time_option = st.selectbox("Choose Time Analysis Type:", ["Time-based", "Day-based"])
         st.write(f"You selected: {time_option}")
+        if time_option is "Time-based":
+            st.header("Time-Based Analysis")
+            st.subheader("Frauds by Time of Day")
+            plot_frauds_by_time_streamlit(df)
+        else:
+            st.header("Day-Based Analysis")
+            st.subheader("Frauds by Day of the Week")
+            plot_frauds_by_day_streamlit(df)
     else:
         st.warning("Please upload a dataset to analyze.")
 
