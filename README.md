@@ -32,7 +32,7 @@ The dataset used for this analysis is publicly available on Kaggle:
   [Credit Card Fraud Detection Analysis Presentation](https://docs.google.com/presentation/d/1sm_ijVbdUXZ6R4UFqpp1J0cU7pSimd2NxQu1CpcAZqs/edit?usp=sharing)
 
 - **Additional References**:  
-  - [Kaggle Dataset Documentation](https://www.kaggle.com/datasets/kartik2112/fraud-detection)
+  [Kaggle Dataset Documentation](https://www.kaggle.com/datasets/kartik2112/fraud-detection)
 
 ---
 
