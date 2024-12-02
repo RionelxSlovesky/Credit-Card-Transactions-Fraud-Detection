@@ -6,11 +6,13 @@ This project explores and analyzes credit card transaction data to identify patt
 ---
 
 ## Contents
-- **Jupyter Notebook**: Includes the code for data preprocessing, exploratory data analysis (EDA), and visualizations.
-- **Assumptions Document**: A Markdown file (`assumptions.md`) detailing all assumptions made during data processing and analysis.
-- **Presentation Slides**: A Google Slides presentation summarizing the key findings and insights.
-- **Team Members**: A Markdown file (`team.md`) listing contributors and their roles.
-- **Supporting Materials**: References and additional resources used in the project.
+- **Jupyter Notebook (`Data Analysis.ipynb`)**: Contains the code for data processing, analysis, and visualizations of credit card fraud detection.
+- **Streamlit App (`streamlit_app.py`)**: An interactive dashboard for visualizing and analyzing fraud detection patterns.
+- **Configuration Folder (`.streamlit`)**: Includes configurations for Streamlit, such as maximum file upload size.
+- **Requirements (`requirements.txt`)**: Lists the Python dependencies required to run the Jupyter Notebook and Streamlit app.
+- **README (`README.md`)**: This file, providing an overview of the project and its structure.
+- **Git Ignore File (`.gitignore`)**: Specifies untracked files to be ignored by Git.
+- **Checkpoints Folder (`.ipynb_checkpoints`)**: Auto-generated backups of the Jupyter notebook for recovery purposes.
 
 ---
 
